@@ -1,6 +1,8 @@
 package de.kla.adventofcode.day.one
 
-import java.io.File
+import de.kla.adventofcode.helper.inputFile
+
+val INPUT_FILE = inputFile("input-1.txt")
 
 fun main() {
     individualIncreases()
@@ -11,7 +13,7 @@ fun individualIncreases() {
     var increasedCounter = 0
     var lastNumber = Int.MAX_VALUE
 
-    inputFile().forEachLine {
+    INPUT_FILE.forEachLine {
         val currentNumber = it.toInt()
         if (lastNumber < currentNumber) {
             increasedCounter++
@@ -27,11 +29,11 @@ fun sumIncreases() {
 
     var number1 = 0
     var number2 = 0
-    var number3 = 0
+    var number3: Int
 
     var lastSum = Int.MAX_VALUE
 
-    inputFile().forEachLine {
+    INPUT_FILE.forEachLine {
         val currentNumber = it.toInt()
 
         number3 = number2
@@ -45,10 +47,4 @@ fun sumIncreases() {
         lastSum = currentSum
     }
     println("sum increases:$increasedCounter")
-}
-
-class Measurement
-
-fun inputFile(): File {
-    return File(Measurement::class.java.classLoader.getResource("input-1.txt").toURI())
 }
