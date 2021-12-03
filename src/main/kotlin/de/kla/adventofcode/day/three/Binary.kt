@@ -28,9 +28,9 @@ private fun partOne(file: File) {
         it.forEachIndexed { position, element ->
             positions.compute(position) { _, value ->
                 if (element == '1') {
-                    return@compute (value?: 0) + 1
+                    return@compute (value ?: 0) + 1
                 }
-                return@compute value?: 0
+                return@compute value ?: 0
             }
         }
     }
@@ -63,13 +63,36 @@ fun Int.moreCommon(halfLines: Int, moreCommon: Runnable, lessCommon: Runnable) {
 }
 
 private fun partTwo(file: File) {
-    var gammaRate = 0
-    var epsilonRate = 0
+    val oxygenRating = filter(file.readLines(), 0, mostCommonOperation = true)
+    val coRating = filter(file.readLines(), 0, mostCommonOperation = false)
 
-    file.forEachLine {
 
+    val lifeSupportRating = Integer.parseInt(oxygenRating, 2) * Integer.parseInt(coRating, 2)
+    println("part two: $lifeSupportRating")
+}
+
+fun filter(lines: List<String>, position: Int, mostCommonOperation: Boolean): String {
+    // positive = more 1; negative = more 0
+    var mostCommonAtIndex = 0
+    lines.forEach {
+        val number = Character.getNumericValue(it[position])
+        mostCommonAtIndex += if (number == 0) -1 else 1
     }
 
-    val powerConsumption = gammaRate * epsilonRate
-    println("part two: ${powerConsumption}")
+    val toRemove = if (mostCommonOperation) {
+        if (mostCommonAtIndex == 0) {
+            '0'
+        } else if (mostCommonAtIndex > 0) '0' else '1'
+    } else {
+        if (mostCommonAtIndex == 0) {
+            '1'
+        } else if (mostCommonAtIndex < 0) '0' else '1'
+    }
+
+    val filtered = lines.filter { it[position] == toRemove }
+
+    if (filtered.size == 1) {
+        return filtered[0]
+    }
+    return filter(filtered, position + 1, mostCommonOperation)
 }
